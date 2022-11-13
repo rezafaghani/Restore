@@ -1,3 +1,4 @@
+using System.Net;
 using API.Data;
 using API.DTOs;
 using API.Entities;
@@ -23,6 +24,8 @@ public class AccountController : BaseApiController
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByNameAsync(loginDto.Username);
@@ -50,6 +53,8 @@ public class AccountController : BaseApiController
         }
 
         [HttpPost("register")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> Register(RegisterDto registerDto)
         {
             var user = new User { UserName = registerDto.Username, Email = registerDto.Email };
@@ -73,6 +78,8 @@ public class AccountController : BaseApiController
 
         [Authorize]
         [HttpGet("currentUser")]
+        [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -89,6 +96,8 @@ public class AccountController : BaseApiController
 
         [Authorize]
         [HttpGet("savedAddress")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<UserAddress>> GetSavedAddress()
         {
             return await _userManager.Users
